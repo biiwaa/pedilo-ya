@@ -169,9 +169,17 @@ class BootScene extends Phaser.Scene {
     g.fillStyle(0x7d4e24); g.fillCircle(18, 4, 6);
     g.generateTexture('perro', 24, 20);
 
-    // Estrella / propina
+    // Estrella / propina (dibujada como polígono de 5 puntas)
     g.clear();
-    g.fillStyle(0xf1c40f); g.fillStar(8, 8, 5, 8, 4);
+    g.fillStyle(0xf1c40f);
+    const cx = 8, cy = 8, outer = 8, inner = 3.5, pts = 5;
+    const starPoints = [];
+    for (let i = 0; i < pts * 2; i++) {
+      const r   = i % 2 === 0 ? outer : inner;
+      const ang = (i * Math.PI) / pts - Math.PI / 2;
+      starPoints.push(cx + r * Math.cos(ang), cy + r * Math.sin(ang));
+    }
+    g.fillPoints(starPoints.reduce((a, v, i) => { if (i % 2 === 0) a.push({ x: v, y: starPoints[i+1] }); return a; }, []), true);
     g.generateTexture('estrella', 16, 16);
 
     // Explosión
